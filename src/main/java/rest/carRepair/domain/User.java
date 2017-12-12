@@ -22,8 +22,9 @@ public class User {
     @Column(nullable = false)
     private boolean userType;    // value true means ADMIN - value false means USER
 
+    /*@JsonIgnore
     @OneToOne(optional = false, mappedBy = "user", targetEntity = Member.class, cascade = CascadeType.ALL)
-    private Member member;
+    private Member member;*/
 
     public User(){}
 
@@ -49,7 +50,7 @@ public class User {
         return userType;
     }
 
-    public Member getMember() {
+    /*public Member getMember() {
         return member;
-    }
+    }*/
 }

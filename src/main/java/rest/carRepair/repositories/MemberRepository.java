@@ -8,6 +8,6 @@ import java.util.List;
 public interface MemberRepository extends CrudRepository<Member, Long> {
 
     List<Member> findAll();
-    Member findMemberById(long id) /*throws MemberNotFoundExceptpion*/;
+    Member findOne(long id) /*throws MemberNotFoundExceptpion*/;
 
 }

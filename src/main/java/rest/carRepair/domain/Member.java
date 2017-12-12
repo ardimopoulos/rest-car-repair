@@ -1,8 +1,12 @@
 package rest.carRepair.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Member  extends User{
 
     @Column(nullable = false, length = 9, unique = true)
@@ -17,12 +21,14 @@ public class Member  extends User{
     @Column(nullable = false)
     private String address;
 
+    @JsonIgnore
     @OneToOne(optional = false)
     @JoinColumn(name = "userId")
     private User user;
 
+    /*@JsonManagedReference
     @OneToMany(mappedBy = "member", targetEntity = Vehicle.class, cascade = CascadeType.ALL)
-    private List<Vehicle> vehicles;
+    private List<Vehicle> vehicles;*/
 
     public Member() {
     }
@@ -55,7 +61,7 @@ public class Member  extends User{
         return user;
     }
 
-    public List<Vehicle> getVehicles() {
+    /*public List<Vehicle> getVehicles() {
         return vehicles;
-    }
+    }*/
 }
