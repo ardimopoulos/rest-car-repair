@@ -30,4 +30,13 @@ public class MemberServiceImp implements MemberService{
         }
         return member;
     }
+
+    @Override
+    public Member saveMember(Member member){
+        Member newMember = memberRepository.save(member);
+        if(newMember == null){
+            return null;
+        }
+        return newMember;
+    }
 }

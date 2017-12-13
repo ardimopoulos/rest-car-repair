@@ -1,5 +1,7 @@
 package rest.carRepair.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -27,10 +29,10 @@ public class Vehicle {
     @Column(nullable = false)
     private String color;
 
-    //@JsonBackReference
+    /*@JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_Id", referencedColumnName = "user_id")
-    private Member member;
+    private Member member;*/
 
     //@JsonManagedReference
    /* @OneToMany(mappedBy = "vehicle", targetEntity = Repair.class, cascade = CascadeType.ALL)
@@ -70,9 +72,9 @@ public class Vehicle {
         return color;
     }
 
-    public Member getMember() {
+    /*public Member getMember() {
         return member;
-    }
+    }*/
 
    /*public List<Repair> getRepairs() {
         return repairs;
