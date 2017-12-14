@@ -16,7 +16,6 @@ public class User {
     @Column(nullable = false, unique = true, length = 60)
     private String email;
 
-    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -54,4 +53,20 @@ public class User {
     /*public Member getMember() {
         return member;
     }*/
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserType(boolean userType) {
+        this.userType = userType;
+    }
 }

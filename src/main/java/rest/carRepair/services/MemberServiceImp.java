@@ -3,8 +3,12 @@ package rest.carRepair.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rest.carRepair.domain.Member;
+import rest.carRepair.exceptions.member.MemberExistException;
+import rest.carRepair.exceptions.member.MemberNotFoundException;
+import rest.carRepair.exceptions.member.MembersNotFoundException;
 import rest.carRepair.repositories.MemberRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,29 +18,44 @@ public class MemberServiceImp implements MemberService{
     private MemberRepository memberRepository;
 
     @Override
-    public List<Member> getMembers() {
+    public List<Member> getMembers() throws MembersNotFoundException{
         List<Member> allMembers = memberRepository.findAll();
-        if(allMembers == null){
-            return null;
+        if(allMembers.size() == 0){
+            throw new MembersNotFoundException("Members not found");
         }
         return allMembers;
     }
 
     @Override
-    public Member getMemberById(long id) {
+    public Member getMemberById(long id) throws MemberNotFoundException {
         Member member = memberRepository.findOne(id);
         if(member == null){
-            return null;
+            throw new MemberNotFoundException("Member not found");
         }
         return member;
     }
 
     @Override
-    public Member saveMember(Member member){
-        Member newMember = memberRepository.save(member);
-        if(newMember == null){
-            return null;
+    public Member saveMember(Member member) throws MemberExistException{
+        try {
+            Member newMember = memberRepository.save(member);
+            return newMember;
+        }catch (Exception e){
+            throw new MemberExistException("Member already exist with same VAT and/or email");
         }
-        return newMember;
+    }
+
+    @Override
+    public void updateMember(Long memberId, Member member)throws MemberNotFoundException {
+        getMemberById(memberId);
+        member.setUserId(memberId);
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    @Override
+    public void deleteMemberById(long id) throws MemberNotFoundException{
+        getMemberById(id);
+        memberRepository.deleteByUserId(id);
     }
 }
