@@ -1,5 +1,7 @@
 package rest.carRepair.services;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import rest.carRepair.domain.Member;
 import rest.carRepair.exceptions.member.MemberExistException;
 import rest.carRepair.exceptions.member.MemberNotFoundException;
@@ -15,7 +17,7 @@ public interface MemberService {
 
     Member saveMember(Member member) throws MemberExistException;
 
-    void updateMember(Long Id, Member member) throws MemberNotFoundException;
+    Member updateMember(Long Id, Member member) throws MemberNotFoundException;
 
     void deleteMemberById(long id) throws MemberNotFoundException;
 }

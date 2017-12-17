@@ -46,10 +46,10 @@ public class MemberServiceImp implements MemberService{
     }
 
     @Override
-    public void updateMember(Long memberId, Member member)throws MemberNotFoundException {
+    public Member updateMember(Long memberId, Member member)throws MemberNotFoundException {
         getMemberById(memberId);
         member.setUserId(memberId);
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     @Transactional
