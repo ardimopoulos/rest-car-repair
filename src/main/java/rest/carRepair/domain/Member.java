@@ -1,5 +1,6 @@
 package rest.carRepair.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -26,9 +27,9 @@ public class Member  extends User{
     @JoinColumn(name = "userId")
     private User user;
 
-    /*@JsonManagedReference
     @OneToMany(mappedBy = "member", targetEntity = Vehicle.class, cascade = CascadeType.ALL)
-    private List<Vehicle> vehicles;*/
+    @JsonIgnore
+    private List<Vehicle> vehicles;
 
     public Member() {
     }
@@ -61,9 +62,9 @@ public class Member  extends User{
         return user;
     }
 
-    /*public List<Vehicle> getVehicles() {
+    public List<Vehicle> getVehicles() {
         return vehicles;
-    }*/
+    }
 
 
 }
