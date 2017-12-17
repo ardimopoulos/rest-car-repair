@@ -25,7 +25,7 @@ public class VehicleServiceImp implements VehicleService {
     private MemberService memberService;
 
     @Override
-    public List<Vehicle> getAllMemberVehicles(Long memberId) throws VehiclesNotFoundException, MemberNotFoundException {
+    public List<Vehicle> getAllVehiclesByMember(Long memberId) throws VehiclesNotFoundException, MemberNotFoundException {
         Member member = memberService.getMemberById(memberId);
         List<Vehicle> memberVehicles = member.getVehicles();
         if(memberVehicles.size() == 0){
@@ -35,12 +35,11 @@ public class VehicleServiceImp implements VehicleService {
     }
 
     @Override
-    public Vehicle getMemberVehicle(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
+    public Vehicle getVehicleByMember(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
         Vehicle vehicle = vehicleRepository.findOne(vehicleId);
         if(vehicle == null){
             throw new VehicleNotFoundException("Vehicle with id " + vehicleId + " not found");
         }
-
         if(!(vehicle.getMember().getUserId() == memberId)){
             throw new VehicleNotReferredToUserException("Vehicle with id " + vehicleId + " is not referred to user with id " + memberId);
         }
@@ -50,34 +49,26 @@ public class VehicleServiceImp implements VehicleService {
     @Override
     public Vehicle saveVehicle(Long memberId, Vehicle vehicle) throws VehicleExistException, MemberNotFoundException {
         Member member = memberService.getMemberById(memberId);
-        Vehicle newVehicle;
         try {
             vehicle.setMember(member);
-            newVehicle = vehicleRepository.save(vehicle);
+            Vehicle newVehicle = vehicleRepository.save(vehicle);
+            return newVehicle;
         } catch (Exception e){
             throw new VehicleExistException("Vehicle with plate " + vehicle.getPlate() + " already exists");
         }
-        return newVehicle;
     }
 
     @Override
-    public Vehicle updateVehicle(Long memberId, Long vehicleId, Vehicle vehicle) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException {
-        Vehicle memberVehicle = getMemberVehicle(memberId, vehicleId);
+    public Vehicle updateVehicle(Long memberId, Long vehicleId, Vehicle vehicle) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException, MemberNotFoundException {
+        getVehicleByMember(memberId, vehicleId);
         vehicle.setVehicleId(vehicleId);
-        vehicle.setMember(memberVehicle.getMember());
-        Vehicle updatedVehicle;
-        try{
-            updatedVehicle = vehicleRepository.save(vehicle);
-        }catch(Exception e){
-            throw new VehicleExistException("Vehicle with plate " + vehicle.getPlate() + " already exists");
-        }
-        return updatedVehicle;
+        return saveVehicle(memberId,vehicle);
     }
 
     @Transactional
     @Override
     public void deleteVehicle(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
-        getMemberVehicle(memberId, vehicleId);
+        getVehicleByMember(memberId, vehicleId);
         vehicleRepository.deleteByVehicleId(vehicleId);
     }
 }

@@ -24,13 +24,13 @@ public class VehicleController {
 
     @GetMapping("/members/{memberId}/vehicles")
     public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Long memberId) throws VehiclesNotFoundException, MemberNotFoundException {
-        List<Vehicle> allUserVehicles = vehicleService.getAllMemberVehicles(memberId);
-        return new ResponseEntity(allUserVehicles, HttpStatus.OK);
+        List<Vehicle> allVehicles = vehicleService.getAllVehiclesByMember(memberId);
+        return new ResponseEntity(allVehicles, HttpStatus.OK);
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}")
     public ResponseEntity<Vehicle> getVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
-        Vehicle vehicle = vehicleService.getMemberVehicle(memberId, vehicleId);
+        Vehicle vehicle = vehicleService.getVehicleByMember(memberId, vehicleId);
         return new ResponseEntity(vehicle, HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class VehicleController {
     }
 
     @PutMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity updateVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId, @RequestBody Vehicle vehicle) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException{
+    public ResponseEntity updateVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId, @RequestBody Vehicle vehicle) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException, MemberNotFoundException {
         vehicleService.updateVehicle(memberId, vehicleId, vehicle);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
