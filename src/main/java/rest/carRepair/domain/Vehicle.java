@@ -1,6 +1,8 @@
 package rest.carRepair.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,10 +31,10 @@ public class Vehicle {
     @Column(nullable = false)
     private String color;
 
-    /*@JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_Id", referencedColumnName = "user_id")
-    private Member member;*/
+    @JsonIgnore
+    private Member member;
 
     //@JsonManagedReference
    /* @OneToMany(mappedBy = "vehicle", targetEntity = Repair.class, cascade = CascadeType.ALL)
@@ -72,9 +74,9 @@ public class Vehicle {
         return color;
     }
 
-    /*public Member getMember() {
+    public Member getMember() {
         return member;
-    }*/
+    }
 
    /*public List<Repair> getRepairs() {
         return repairs;
@@ -83,4 +85,32 @@ public class Vehicle {
     public void setRepairs(List<Repair> repairs) {
         this.repairs = repairs;
     }*/
+
+    public void setVehicleId(long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public void setPlate(String plate) {
+        this.plate = plate;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setYear(Date year) {
+        this.year = year;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }
