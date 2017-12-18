@@ -1,7 +1,5 @@
 package rest.carRepair.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity
@@ -21,10 +19,6 @@ public class User {
 
     @Column(nullable = false)
     private boolean userType;    // value true means ADMIN - value false means USER
-
-    /*@JsonIgnore
-    @OneToOne(optional = false, mappedBy = "user", targetEntity = Member.class, cascade = CascadeType.ALL)
-    private Member member;*/
 
     public User(){}
 
@@ -49,10 +43,6 @@ public class User {
     public boolean isUserType() {
         return userType;
     }
-
-    /*public Member getMember() {
-        return member;
-    }*/
 
     public void setUserId(long userId) {
         this.userId = userId;

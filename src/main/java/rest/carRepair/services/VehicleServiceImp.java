@@ -9,7 +9,6 @@ import rest.carRepair.exceptions.vehicle.VehicleExistException;
 import rest.carRepair.exceptions.vehicle.VehicleNotFoundException;
 import rest.carRepair.exceptions.vehicle.VehicleNotReferredToUserException;
 import rest.carRepair.exceptions.vehicle.VehiclesNotFoundException;
-import rest.carRepair.repositories.MemberRepository;
 import rest.carRepair.repositories.VehicleRepository;
 
 import javax.transaction.Transactional;
