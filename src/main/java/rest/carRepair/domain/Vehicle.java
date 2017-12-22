@@ -36,9 +36,9 @@ public class Vehicle {
     @JsonIgnore
     private Member member;
 
-    //@JsonManagedReference
-   /* @OneToMany(mappedBy = "vehicle", targetEntity = Repair.class, cascade = CascadeType.ALL)
-    protected List<Repair> repairs;*/
+    @OneToMany(mappedBy = "vehicle", targetEntity = Repair.class, cascade = CascadeType.ALL)
+    @JsonIgnore
+    protected List<Repair> repairs;
 
     public Vehicle(){}
 
