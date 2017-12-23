@@ -1,5 +1,9 @@
 package rest.carRepair.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -11,6 +15,7 @@ public class Repair{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long repairId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(nullable = false)
     private LocalDateTime repairDate;
 
@@ -26,6 +31,7 @@ public class Repair{
     @Column(nullable = false)
     private double cost;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
     private Vehicle vehicle;
