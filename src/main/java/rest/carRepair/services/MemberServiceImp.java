@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import rest.carRepair.domain.Member;
 import rest.carRepair.exceptions.member.MemberExistException;
 import rest.carRepair.exceptions.member.MemberNotFoundException;
-import rest.carRepair.exceptions.member.MembersNotFoundException;
 import rest.carRepair.repositories.MemberRepository;
 
 import javax.transaction.Transactional;
@@ -18,10 +17,10 @@ public class MemberServiceImp implements MemberService{
     private MemberRepository memberRepository;
 
     @Override
-    public List<Member> getMembers() throws MembersNotFoundException{
+    public List<Member> getMembers() throws MemberNotFoundException{
         List<Member> allMembers = memberRepository.findAll();
         if(allMembers.size() == 0){
-            throw new MembersNotFoundException("Members not found");
+            throw new MemberNotFoundException("Members not found");
         }
         return allMembers;
     }

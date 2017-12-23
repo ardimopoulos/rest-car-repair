@@ -10,7 +10,6 @@ import rest.carRepair.exceptions.member.MemberNotFoundException;
 import rest.carRepair.exceptions.vehicle.VehicleExistException;
 import rest.carRepair.exceptions.vehicle.VehicleNotFoundException;
 import rest.carRepair.exceptions.vehicle.VehicleNotReferredToUserException;
-import rest.carRepair.exceptions.vehicle.VehiclesNotFoundException;
 import rest.carRepair.services.VehicleService;
 
 import java.net.URI;
@@ -23,19 +22,19 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @GetMapping("/members/{memberId}/vehicles")
-    public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Long memberId) throws VehiclesNotFoundException, MemberNotFoundException {
+    public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Long memberId) throws VehicleNotFoundException, MemberNotFoundException {
         List<Vehicle> allVehicles = vehicleService.getAllVehiclesByMember(memberId);
         return new ResponseEntity(allVehicles, HttpStatus.OK);
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity<Vehicle> getVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
+    public ResponseEntity<Vehicle> getVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         Vehicle vehicle = vehicleService.getVehicleByMember(memberId, vehicleId);
         return new ResponseEntity(vehicle, HttpStatus.OK);
     }
 
     @PostMapping("members/{memberId}/vehicles")
-    public ResponseEntity createVehicle(@PathVariable Long memberId, @RequestBody Vehicle vehicle) throws VehicleExistException, MemberNotFoundException {
+    public ResponseEntity createVehicle(@PathVariable Long memberId, @RequestBody Vehicle vehicle) throws MemberNotFoundException, VehicleExistException {
         Vehicle newVehicle = vehicleService.saveVehicle(memberId, vehicle);
 
         URI location = ServletUriComponentsBuilder
@@ -54,7 +53,7 @@ public class VehicleController {
     }
 
     @DeleteMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity deleteVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
+    public ResponseEntity deleteVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         vehicleService.deleteVehicle(memberId, vehicleId);
         return new ResponseEntity(HttpStatus.OK);
     }

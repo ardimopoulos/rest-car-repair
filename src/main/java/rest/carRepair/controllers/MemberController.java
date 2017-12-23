@@ -8,7 +8,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import rest.carRepair.domain.Member;
 import rest.carRepair.exceptions.member.MemberExistException;
 import rest.carRepair.exceptions.member.MemberNotFoundException;
-import rest.carRepair.exceptions.member.MembersNotFoundException;
 import rest.carRepair.services.MemberService;
 
 import java.net.URI;
@@ -21,15 +20,15 @@ public class MemberController {
     private MemberService memberService;
 
     @GetMapping("/members")
-    public ResponseEntity<List<Member>> getAllusers() throws MembersNotFoundException {
+    public ResponseEntity<List<Member>> getMembers() throws MemberNotFoundException {
         List<Member> allMembers = memberService.getMembers();
         return new ResponseEntity<>(allMembers, HttpStatus.OK);
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<Object> getMember(@PathVariable Long id) throws MemberNotFoundException {
+    public ResponseEntity<Member> getMember(@PathVariable Long id) throws MemberNotFoundException {
         Member member = memberService.getMemberById(id);
-        return new ResponseEntity<>(member,HttpStatus.OK);
+        return new ResponseEntity(member,HttpStatus.OK);
     }
 
     @PostMapping("/members")

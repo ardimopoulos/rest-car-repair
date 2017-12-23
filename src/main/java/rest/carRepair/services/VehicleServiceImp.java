@@ -8,7 +8,6 @@ import rest.carRepair.exceptions.member.MemberNotFoundException;
 import rest.carRepair.exceptions.vehicle.VehicleExistException;
 import rest.carRepair.exceptions.vehicle.VehicleNotFoundException;
 import rest.carRepair.exceptions.vehicle.VehicleNotReferredToUserException;
-import rest.carRepair.exceptions.vehicle.VehiclesNotFoundException;
 import rest.carRepair.repositories.VehicleRepository;
 
 import javax.transaction.Transactional;
@@ -24,17 +23,18 @@ public class VehicleServiceImp implements VehicleService {
     private MemberService memberService;
 
     @Override
-    public List<Vehicle> getAllVehiclesByMember(Long memberId) throws VehiclesNotFoundException, MemberNotFoundException {
+    public List<Vehicle> getAllVehiclesByMember(Long memberId) throws VehicleNotFoundException, MemberNotFoundException {
         Member member = memberService.getMemberById(memberId);
         List<Vehicle> memberVehicles = member.getVehicles();
         if(memberVehicles.size() == 0){
-            throw new VehiclesNotFoundException("There are not found vehicle for user with id " + memberId);
+            throw new VehicleNotFoundException("There are not found vehicle for user with id " + memberId);
         }
         return memberVehicles;
     }
 
     @Override
-    public Vehicle getVehicleByMember(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
+    public Vehicle getVehicleByMember(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+        memberService.getMemberById(memberId);
         Vehicle vehicle = vehicleRepository.findOne(vehicleId);
         if(vehicle == null){
             throw new VehicleNotFoundException("Vehicle with id " + vehicleId + " not found");
@@ -66,7 +66,7 @@ public class VehicleServiceImp implements VehicleService {
 
     @Transactional
     @Override
-    public void deleteVehicle(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException {
+    public void deleteVehicle(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         getVehicleByMember(memberId, vehicleId);
         vehicleRepository.deleteByVehicleId(vehicleId);
     }

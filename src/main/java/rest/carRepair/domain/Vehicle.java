@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Vehicle {
@@ -78,13 +79,13 @@ public class Vehicle {
         return member;
     }
 
-   /*public List<Repair> getRepairs() {
+   public List<Repair> getRepairs() {
         return repairs;
     }
 
     public void setRepairs(List<Repair> repairs) {
         this.repairs = repairs;
-    }*/
+    }
 
     public void setVehicleId(long vehicleId) {
         this.vehicleId = vehicleId;
