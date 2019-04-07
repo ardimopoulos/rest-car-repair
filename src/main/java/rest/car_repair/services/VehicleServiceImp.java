@@ -11,7 +11,6 @@ import rest.car_repair.exceptions.vehicle.VehicleNotReferredToUserException;
 import rest.car_repair.repositories.VehicleRepository;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.isNull;

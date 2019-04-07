@@ -14,7 +14,7 @@ public interface MemberService {
 
     Member saveMember(Member member) throws MemberExistException;
 
-    Member updateMember(Long Id, Member member) throws MemberNotFoundException;
+    Member updateMember(Long id, Member member) throws MemberNotFoundException;
 
     void deleteMemberById(long id) throws MemberNotFoundException;
 }
