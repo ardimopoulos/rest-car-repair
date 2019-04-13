@@ -1,16 +1,20 @@
 package rest.car_repair.controllers;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import rest.car_repair.domain.Member;
+import rest.car_repair.dto.MemberDTO;
 import rest.car_repair.exceptions.member.MemberExistException;
 import rest.car_repair.exceptions.member.MemberNotFoundException;
 import rest.car_repair.services.MemberService;
 
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 
@@ -20,23 +24,33 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/members")
-    public ResponseEntity<List<Member>> getMembers() throws MemberNotFoundException {
+    public ResponseEntity<List<MemberDTO>> getMembers() throws MemberNotFoundException {
         List<Member> allMembers = memberService.getMembers();
-        return new ResponseEntity<>(allMembers, HttpStatus.OK);
+
+        Type listType = new TypeToken<List<MemberDTO>>() {}.getType();
+        List<MemberDTO> allMembersDTO = modelMapper.map(allMembers, listType);
+
+        return new ResponseEntity<>(allMembersDTO, HttpStatus.OK);
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<Member> getMember(@PathVariable Long id) throws MemberNotFoundException {
+    public ResponseEntity<MemberDTO> getMember(@PathVariable Long id) throws MemberNotFoundException {
         Member member = memberService.getMemberById(id);
-        return new ResponseEntity<>(member,HttpStatus.OK);
+        MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
+
+        return new ResponseEntity<>(memberDTO, HttpStatus.OK);
     }
 
     @PostMapping("/members")
-    public ResponseEntity<Member> saveMember(@RequestBody Member member) throws MemberExistException {
+    public ResponseEntity<Member> saveMember(@RequestBody MemberDTO memberDTO) throws MemberExistException {
+        Member member = modelMapper.map(memberDTO, Member.class);
         Member newMember = memberService.saveMember(member);
-        URI location =
-                ServletUriComponentsBuilder
+
+        URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/{d}")
                         .buildAndExpand(newMember.getUserId())
@@ -46,8 +60,10 @@ public class MemberController {
     }
 
     @PutMapping("/members/{id}")
-    public ResponseEntity updateMember(@PathVariable Long id, @RequestBody Member member) throws MemberNotFoundException {
+    public ResponseEntity updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO) throws MemberNotFoundException {
+        Member member = modelMapper.map(memberDTO, Member.class);
         memberService.updateMember(id, member);
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

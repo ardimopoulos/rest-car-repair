@@ -1,11 +1,14 @@
 package rest.car_repair.controllers;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import rest.car_repair.domain.Repair;
+import rest.car_repair.dto.RepairDTO;
 import rest.car_repair.exceptions.member.MemberNotFoundException;
 import rest.car_repair.exceptions.repair.RepairExistException;
 import rest.car_repair.exceptions.repair.RepairNotFoundException;
@@ -14,6 +17,7 @@ import rest.car_repair.exceptions.vehicle.VehicleNotFoundException;
 import rest.car_repair.exceptions.vehicle.VehicleNotReferredToUserException;
 import rest.car_repair.services.RepairService;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 
@@ -23,20 +27,30 @@ public class RepairController {
     @Autowired
     private RepairService repairService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}/repairs")
-    public ResponseEntity<List<Repair>> getRepairs(@PathVariable Long memberId, @PathVariable Long vehicleId) throws RepairNotFoundException, VehicleNotReferredToUserException, VehicleNotFoundException, MemberNotFoundException {
+    public ResponseEntity<List<RepairDTO>> getRepairs(@PathVariable Long memberId, @PathVariable Long vehicleId) throws RepairNotFoundException, VehicleNotReferredToUserException, VehicleNotFoundException, MemberNotFoundException {
         List<Repair> repairs = repairService.getRepairsByVehicle(memberId, vehicleId);
-        return new ResponseEntity<>(repairs, HttpStatus.OK);
+
+        Type listType = new TypeToken<List<RepairDTO>>() {}.getType();
+        List<RepairDTO> repairsDTO = modelMapper.map(repairs, listType);
+
+        return new ResponseEntity<>(repairsDTO, HttpStatus.OK);
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}/repairs/{repairId}")
-    public ResponseEntity<Repair> getRepair(@PathVariable Long memberId,@PathVariable Long vehicleId,@PathVariable Long repairId) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
-        Repair repair = repairService.getRepairByVehicle(memberId,vehicleId,repairId);
-        return new ResponseEntity<>(repair,HttpStatus.OK);
+    public ResponseEntity<RepairDTO> getRepair(@PathVariable Long memberId, @PathVariable Long vehicleId, @PathVariable Long repairId) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
+        Repair repair = repairService.getRepairByVehicle(memberId, vehicleId, repairId);
+        RepairDTO repairDTO = modelMapper.map(repair, RepairDTO.class);
+
+        return new ResponseEntity<>(repairDTO,HttpStatus.OK);
     }
 
     @PostMapping("/members/{memberId}/vehicles/{vehicleId}/repairs")
-    public ResponseEntity createRepair(@PathVariable Long memberId, @PathVariable Long vehicleId, @RequestBody Repair repair) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+    public ResponseEntity createRepair(@PathVariable Long memberId, @PathVariable Long vehicleId, @RequestBody RepairDTO repairDTO) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+        Repair repair = modelMapper.map(repairDTO, Repair.class);
         Repair newRepair = repairService.saveRepair(memberId, vehicleId, repair);
 
         URI location = ServletUriComponentsBuilder
@@ -49,8 +63,10 @@ public class RepairController {
     }
 
     @PutMapping("/members/{memberId}/vehicles/{vehicleId}/repairs/{repairId}")
-    public ResponseEntity updateRepair(@PathVariable Long memberId,@PathVariable Long vehicleId,@PathVariable Long repairId, @RequestBody Repair repair) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException, RepairExistException {
+    public ResponseEntity updateRepair(@PathVariable Long memberId,@PathVariable Long vehicleId,@PathVariable Long repairId, @RequestBody RepairDTO repairDTO) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException, RepairExistException {
+        Repair repair = modelMapper.map(repairDTO, Repair.class);
         repairService.updateRepair(memberId, vehicleId, repairId, repair);
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
