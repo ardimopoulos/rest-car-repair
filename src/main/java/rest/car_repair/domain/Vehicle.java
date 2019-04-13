@@ -1,12 +1,18 @@
 package rest.car_repair.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Vehicle {
 
     @Id
@@ -37,9 +43,7 @@ public class Vehicle {
 
     @OneToMany(mappedBy = "vehicle", targetEntity = Repair.class, cascade = CascadeType.ALL)
     @JsonIgnore
-    protected List<Repair> repairs;
-
-    public Vehicle(){}
+    private List<Repair> repairs;
 
     public Vehicle(String plate, String brand, String model, Date year, String color) {
         this.plate = plate;
@@ -47,69 +51,5 @@ public class Vehicle {
         this.model = model;
         this.year = year;
         this.color = color;
-    }
-
-    public long getVehicleId() {
-        return vehicleId;
-    }
-
-    public String getPlate() {
-        return plate;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public Date getYear() {
-        return year;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-   public List<Repair> getRepairs() {
-        return repairs;
-    }
-
-    public void setRepairs(List<Repair> repairs) {
-        this.repairs = repairs;
-    }
-
-    public void setVehicleId(long vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public void setPlate(String plate) {
-        this.plate = plate;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public void setYear(Date year) {
-        this.year = year;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 }

@@ -2,11 +2,17 @@ package rest.car_repair.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Repair{
 
     @Id
@@ -35,70 +41,11 @@ public class Repair{
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
     private Vehicle vehicle;
 
-    public Repair(){}
-
     public Repair(LocalDateTime repairDate, int status, String description, boolean type, double cost) {
         this.repairDate = repairDate;
         this.status = status;
         this.description = description;
         this.type = type;
         this.cost = cost;
-    }
-
-
-    public long getRepairId() {
-        return repairId;
-    }
-
-    public void setRepairId(long repairId) {
-        this.repairId = repairId;
-    }
-
-    public LocalDateTime getRepairDate() {
-        return repairDate;
-    }
-
-    public void setRepairDate(LocalDateTime repairDate) {
-        this.repairDate = repairDate;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean getType() {
-        return type;
-    }
-
-    public void setType(boolean type) {
-        this.type = type;
-    }
-
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 }
