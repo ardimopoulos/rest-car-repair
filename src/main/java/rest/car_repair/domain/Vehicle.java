@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -21,6 +22,7 @@ public class Vehicle {
     private long vehicleId;
 
     @Column(nullable = false, unique = true)
+    @Pattern(regexp = "[A-Z]{3}-[0-9]{3}")
     private String plate;
 
     @Column(nullable = false)
@@ -30,8 +32,7 @@ public class Vehicle {
     private String model;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date year;
+    private LocalDate year;
 
     @Column(nullable = false)
     private String color;
@@ -45,7 +46,7 @@ public class Vehicle {
     @JsonIgnore
     private List<Repair> repairs;
 
-    public Vehicle(String plate, String brand, String model, Date year, String color) {
+    public Vehicle(String plate, String brand, String model, LocalDate year, String color) {
         this.plate = plate;
         this.brand = brand;
         this.model = model;
