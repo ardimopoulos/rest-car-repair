@@ -5,6 +5,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import rest.car_repair.domain.Vehicle;
@@ -15,11 +16,14 @@ import rest.car_repair.exceptions.vehicle.VehicleNotFoundException;
 import rest.car_repair.exceptions.vehicle.VehicleNotReferredToUserException;
 import rest.car_repair.services.VehicleService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 
 @RestController
+@Validated
 public class VehicleController {
 
     @Autowired
@@ -29,7 +33,7 @@ public class VehicleController {
     private ModelMapper modelMapper;
 
     @GetMapping("/members/{memberId}/vehicles")
-    public ResponseEntity<List<VehicleDTO>> getVehicles(@PathVariable Long memberId) throws VehicleNotFoundException, MemberNotFoundException {
+    public ResponseEntity<List<VehicleDTO>> getVehicles(@PathVariable @Min(1) Long memberId) throws VehicleNotFoundException, MemberNotFoundException {
         List<Vehicle> allVehicles = vehicleService.getAllVehiclesByMember(memberId);
 
         Type listType = new TypeToken<List<VehicleDTO>>() {}.getType();
@@ -39,7 +43,7 @@ public class VehicleController {
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         Vehicle vehicle = vehicleService.getVehicleByMember(memberId, vehicleId);
         VehicleDTO vehicleDTO = modelMapper.map(vehicle, VehicleDTO.class);
 
@@ -47,7 +51,7 @@ public class VehicleController {
     }
 
     @PostMapping("members/{memberId}/vehicles")
-    public ResponseEntity createVehicle(@PathVariable Long memberId, @RequestBody VehicleDTO vehicleDTO) throws MemberNotFoundException, VehicleExistException {
+    public ResponseEntity createVehicle(@PathVariable @Min(1) Long memberId, @Valid @RequestBody VehicleDTO vehicleDTO) throws MemberNotFoundException, VehicleExistException {
         Vehicle vehicle = modelMapper.map(vehicleDTO, Vehicle.class);
         Vehicle newVehicle = vehicleService.saveVehicle(memberId, vehicle);
 
@@ -61,7 +65,7 @@ public class VehicleController {
     }
 
     @PutMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity updateVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId, @RequestBody VehicleDTO vehicleDTO) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException, MemberNotFoundException {
+    public ResponseEntity updateVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @Valid @RequestBody VehicleDTO vehicleDTO) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException, MemberNotFoundException {
         Vehicle vehicle = modelMapper.map(vehicleDTO, Vehicle.class);
         vehicleService.updateVehicle(memberId, vehicleId, vehicle);
 
@@ -69,7 +73,7 @@ public class VehicleController {
     }
 
     @DeleteMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity deleteVehicle(@PathVariable Long memberId, @PathVariable Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+    public ResponseEntity deleteVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         vehicleService.deleteVehicle(memberId, vehicleId);
         return new ResponseEntity(HttpStatus.OK);
     }

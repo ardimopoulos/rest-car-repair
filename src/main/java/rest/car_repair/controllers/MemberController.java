@@ -5,6 +5,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import rest.car_repair.domain.Member;
@@ -13,12 +14,14 @@ import rest.car_repair.exceptions.member.MemberExistException;
 import rest.car_repair.exceptions.member.MemberNotFoundException;
 import rest.car_repair.services.MemberService;
 
-
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 
 @RestController
+@Validated
 public class MemberController {
 
     @Autowired
@@ -38,7 +41,7 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<MemberDTO> getMember(@PathVariable Long id) throws MemberNotFoundException {
+    public ResponseEntity<MemberDTO> getMember(@PathVariable @Min(1) Long id) throws MemberNotFoundException {
         Member member = memberService.getMemberById(id);
         MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
 
@@ -46,7 +49,7 @@ public class MemberController {
     }
 
     @PostMapping("/members")
-    public ResponseEntity<Member> saveMember(@RequestBody MemberDTO memberDTO) throws MemberExistException {
+    public ResponseEntity<Member> saveMember(@Valid @RequestBody MemberDTO memberDTO) throws MemberExistException {
         Member member = modelMapper.map(memberDTO, Member.class);
         Member newMember = memberService.saveMember(member);
 
@@ -60,7 +63,7 @@ public class MemberController {
     }
 
     @PutMapping("/members/{id}")
-    public ResponseEntity updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO) throws MemberNotFoundException {
+    public ResponseEntity updateMember(@PathVariable @Min(1) Long id, @Valid @RequestBody MemberDTO memberDTO) throws MemberNotFoundException {
         Member member = modelMapper.map(memberDTO, Member.class);
         memberService.updateMember(id, member);
 
@@ -68,7 +71,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/members/{id}")
-    public ResponseEntity deleteMember(@PathVariable Long id) throws MemberNotFoundException{
+    public ResponseEntity deleteMember(@PathVariable @Min(1) Long id) throws MemberNotFoundException{
         memberService.deleteMemberById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
