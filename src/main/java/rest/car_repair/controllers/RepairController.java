@@ -35,7 +35,9 @@ public class RepairController {
     private ModelMapper modelMapper;
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}/repairs")
-    public ResponseEntity<List<RepairDTO>> getRepairs(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId) throws RepairNotFoundException, VehicleNotReferredToUserException, VehicleNotFoundException, MemberNotFoundException {
+    public ResponseEntity<List<RepairDTO>> getRepairs(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId)
+            throws RepairNotFoundException, VehicleNotReferredToUserException, VehicleNotFoundException, MemberNotFoundException {
+
         List<Repair> repairs = repairService.getRepairsByVehicle(memberId, vehicleId);
 
         Type listType = new TypeToken<List<RepairDTO>>() {}.getType();
@@ -45,7 +47,9 @@ public class RepairController {
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}/repairs/{repairId}")
-    public ResponseEntity<RepairDTO> getRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @PathVariable @Min(1) Long repairId) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
+    public ResponseEntity<RepairDTO> getRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @PathVariable @Min(1) Long repairId)
+            throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
+
         Repair repair = repairService.getRepairByVehicle(memberId, vehicleId, repairId);
         RepairDTO repairDTO = modelMapper.map(repair, RepairDTO.class);
 
@@ -53,7 +57,9 @@ public class RepairController {
     }
 
     @PostMapping("/members/{memberId}/vehicles/{vehicleId}/repairs")
-    public ResponseEntity createRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @Valid @RequestBody RepairDTO repairDTO) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+    public ResponseEntity createRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @Valid @RequestBody RepairDTO repairDTO)
+            throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+
         Repair repair = modelMapper.map(repairDTO, Repair.class);
         Repair newRepair = repairService.saveRepair(memberId, vehicleId, repair);
 
@@ -67,7 +73,9 @@ public class RepairController {
     }
 
     @PutMapping("/members/{memberId}/vehicles/{vehicleId}/repairs/{repairId}")
-    public ResponseEntity updateRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @PathVariable @Min(1) Long repairId, @Valid @RequestBody RepairDTO repairDTO) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException, RepairExistException {
+    public ResponseEntity updateRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @PathVariable @Min(1) Long repairId, @Valid @RequestBody RepairDTO repairDTO)
+            throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException, RepairExistException {
+
         Repair repair = modelMapper.map(repairDTO, Repair.class);
         repairService.updateRepair(memberId, vehicleId, repairId, repair);
 
@@ -75,7 +83,9 @@ public class RepairController {
     }
 
     @DeleteMapping("/members/{memberId}/vehicles/{vehicleId}/repairs/{repairId}")
-    public ResponseEntity deleteRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @PathVariable @Min(1) Long repairId) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
+    public ResponseEntity deleteRepair(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @PathVariable @Min(1) Long repairId)
+            throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
+
         repairService.deleteRepair(memberId, vehicleId, repairId);
         return new ResponseEntity(HttpStatus.OK);
     }

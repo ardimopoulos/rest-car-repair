@@ -43,7 +43,9 @@ public class VehicleController {
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId)
+            throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+
         Vehicle vehicle = vehicleService.getVehicleByMember(memberId, vehicleId);
         VehicleDTO vehicleDTO = modelMapper.map(vehicle, VehicleDTO.class);
 
@@ -51,7 +53,9 @@ public class VehicleController {
     }
 
     @PostMapping("members/{memberId}/vehicles")
-    public ResponseEntity createVehicle(@PathVariable @Min(1) Long memberId, @Valid @RequestBody VehicleDTO vehicleDTO) throws MemberNotFoundException, VehicleExistException {
+    public ResponseEntity createVehicle(@PathVariable @Min(1) Long memberId, @Valid @RequestBody VehicleDTO vehicleDTO)
+            throws MemberNotFoundException, VehicleExistException {
+
         Vehicle vehicle = modelMapper.map(vehicleDTO, Vehicle.class);
         Vehicle newVehicle = vehicleService.saveVehicle(memberId, vehicle);
 
@@ -65,7 +69,9 @@ public class VehicleController {
     }
 
     @PutMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity updateVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @Valid @RequestBody VehicleDTO vehicleDTO) throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException, MemberNotFoundException {
+    public ResponseEntity updateVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId, @Valid @RequestBody VehicleDTO vehicleDTO)
+            throws VehicleNotFoundException, VehicleNotReferredToUserException, VehicleExistException, MemberNotFoundException {
+
         Vehicle vehicle = modelMapper.map(vehicleDTO, Vehicle.class);
         vehicleService.updateVehicle(memberId, vehicleId, vehicle);
 
@@ -73,7 +79,9 @@ public class VehicleController {
     }
 
     @DeleteMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity deleteVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+    public ResponseEntity deleteVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId)
+            throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
+
         vehicleService.deleteVehicle(memberId, vehicleId);
         return new ResponseEntity(HttpStatus.OK);
     }
