@@ -1,12 +1,16 @@
 package rest.car_repair.exceptions.member;
 
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
 
-@ResponseStatus(HttpStatus.CONFLICT)
 public class MemberExistException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+    @Getter
+    private final String message;
+
     public MemberExistException(String message){
         super(message);
+        this.message = message;
     }
 }

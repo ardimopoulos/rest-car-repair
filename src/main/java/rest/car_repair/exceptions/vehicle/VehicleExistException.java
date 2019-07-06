@@ -1,11 +1,15 @@
 package rest.car_repair.exceptions.vehicle;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
 
-@ResponseStatus(HttpStatus.CONFLICT)
 public class VehicleExistException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+    @Getter
+    private final String message;
+
     public VehicleExistException(String message) {
         super(message);
+        this.message = message;
     }
 }
