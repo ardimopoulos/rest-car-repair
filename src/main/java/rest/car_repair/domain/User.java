@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class User {
 
     @Id
     @Column(name = "user_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
     @Column(nullable = false, unique = true, length = 60)
