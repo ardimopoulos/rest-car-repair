@@ -1,8 +1,8 @@
 package rest.car_repair.controllers;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,12 +22,10 @@ import java.util.List;
 
 @RestController
 @Validated
+@AllArgsConstructor
 public class MemberController {
 
-    @Autowired
     private MemberService memberService;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping("/members")
@@ -49,13 +47,13 @@ public class MemberController {
     }
 
     @PostMapping("/members")
-    public ResponseEntity<Member> saveMember(@Valid @RequestBody MemberDTO memberDTO) throws MemberExistException {
+    public ResponseEntity<MemberDTO> saveMember(@Valid @RequestBody MemberDTO memberDTO) throws MemberExistException {
         Member member = modelMapper.map(memberDTO, Member.class);
         Member newMember = memberService.saveMember(member);
 
         URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/{d}")
+                        .path("/{id}")
                         .buildAndExpand(newMember.getUserId())
                         .toUri();
 

@@ -1,6 +1,6 @@
 package rest.car_repair.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import rest.car_repair.domain.Member;
 import rest.car_repair.exceptions.member.MemberExistException;
@@ -9,13 +9,12 @@ import rest.car_repair.repositories.MemberRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class MemberServiceImp implements MemberService{
 
-    @Autowired
     private MemberRepository memberRepository;
 
     @Override
@@ -31,12 +30,13 @@ public class MemberServiceImp implements MemberService{
 
     @Override
     public Member getMemberById(long id) throws MemberNotFoundException {
-        Member member = memberRepository.findOne(id);
+        Optional<Member> persistentMember = memberRepository.findById(id);
 
-        if(isNull(member)){
+        if(!persistentMember.isPresent()){
             throw new MemberNotFoundException("Member not found");
         }
-        return member;
+
+        return persistentMember.get();
     }
 
     @Override
@@ -59,6 +59,6 @@ public class MemberServiceImp implements MemberService{
     @Override
     public void deleteMemberById(long id) throws MemberNotFoundException{
         getMemberById(id);
-        memberRepository.deleteByUserId(id);
+        memberRepository.deleteById(id);
     }
 }

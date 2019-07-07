@@ -1,6 +1,6 @@
 package rest.car_repair.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import rest.car_repair.domain.Repair;
 import rest.car_repair.domain.Vehicle;
@@ -12,16 +12,13 @@ import rest.car_repair.exceptions.vehicle.VehicleNotReferredToUserException;
 import rest.car_repair.repositories.RepairRepository;
 
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class RepairServiceImp implements RepairService {
 
-    @Autowired
     private RepairRepository repairRepository;
-
-    @Autowired
     private VehicleService vehicleService;
 
     @Override
@@ -39,15 +36,18 @@ public class RepairServiceImp implements RepairService {
     @Override
     public Repair getRepairByVehicle(Long memberId, Long vehicleId, Long repairId) throws MemberNotFoundException, VehicleNotReferredToUserException, VehicleNotFoundException, RepairNotReferredToVehicleException, RepairNotFoundException {
         Vehicle vehicle = vehicleService.getVehicleByMember(memberId,vehicleId);
-        Repair repair = repairRepository.findOne(repairId);
+        Optional<Repair> persistentRepair = repairRepository.findById(repairId);
 
-        if(isNull(repair)){
+        if(!persistentRepair.isPresent()){
             throw new RepairNotFoundException("Repair with id " +repairId+ " not foound");
         }
+
+        Repair repair = persistentRepair.get();
 
         if(repair.getVehicle().getVehicleId() != vehicle.getVehicleId()){
             throw new RepairNotReferredToVehicleException("Repair with id " + repairId + " is not referred to vehicle " + vehicleId);
         }
+
         return repair;
     }
 
@@ -67,6 +67,6 @@ public class RepairServiceImp implements RepairService {
     @Override
     public void deleteRepair(Long memberId, Long vehicleId, Long repairId) throws RepairNotReferredToVehicleException, VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException, RepairNotFoundException {
         getRepairByVehicle(memberId, vehicleId, repairId);
-        repairRepository.delete(repairId);
+        repairRepository.deleteById(repairId);
     }
 }

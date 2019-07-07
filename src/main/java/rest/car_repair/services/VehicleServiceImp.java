@@ -1,6 +1,6 @@
 package rest.car_repair.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import rest.car_repair.domain.Member;
 import rest.car_repair.domain.Vehicle;
@@ -12,16 +12,13 @@ import rest.car_repair.repositories.VehicleRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class VehicleServiceImp implements VehicleService {
 
-    @Autowired
     private VehicleRepository vehicleRepository;
-
-    @Autowired
     private MemberService memberService;
 
     @Override
@@ -39,11 +36,13 @@ public class VehicleServiceImp implements VehicleService {
     @Override
     public Vehicle getVehicleByMember(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         memberService.getMemberById(memberId);
-        Vehicle vehicle = vehicleRepository.findOne(vehicleId);
+        Optional<Vehicle> persistenceVehicle = vehicleRepository.findById(vehicleId);
 
-        if(isNull(vehicle)){
+        if(!persistenceVehicle.isPresent()){
             throw new VehicleNotFoundException("Vehicle with id " + vehicleId + " not found");
         }
+
+        Vehicle vehicle = persistenceVehicle.get();
 
         if(vehicle.getMember().getUserId() != memberId){
             throw new VehicleNotReferredToUserException("Vehicle with id " + vehicleId + " is not referred to user with id " + memberId);
@@ -74,6 +73,6 @@ public class VehicleServiceImp implements VehicleService {
     @Override
     public void deleteVehicle(Long memberId, Long vehicleId) throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
         getVehicleByMember(memberId, vehicleId);
-        vehicleRepository.deleteByVehicleId(vehicleId);
+        vehicleRepository.deleteById(vehicleId);
     }
 }

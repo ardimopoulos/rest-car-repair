@@ -1,8 +1,8 @@
 package rest.car_repair.controllers;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,12 +26,10 @@ import java.util.List;
 
 @RestController
 @Validated
+@AllArgsConstructor
 public class RepairController {
 
-    @Autowired
     private RepairService repairService;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}/repairs")
