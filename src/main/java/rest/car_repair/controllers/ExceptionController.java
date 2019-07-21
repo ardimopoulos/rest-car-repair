@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import rest.car_repair.exceptions.ErrorResponse;
+import rest.car_repair.responses.ErrorResponse;
 import rest.car_repair.exceptions.member.MemberExistException;
 import rest.car_repair.exceptions.member.MemberNotFoundException;
 import rest.car_repair.exceptions.repair.RepairExistException;
