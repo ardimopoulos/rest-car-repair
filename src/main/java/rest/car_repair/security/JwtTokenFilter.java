@@ -1,5 +1,6 @@
 package rest.car_repair.security;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -33,7 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         } catch (AuthenticationTokenException e) {
             SecurityContextHolder.clearContext();
-            httpServletResponse.sendError(e.getHttpStatus().value(), e.getMessage());
+            httpServletResponse.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
