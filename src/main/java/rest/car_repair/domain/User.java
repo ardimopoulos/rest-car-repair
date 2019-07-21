@@ -26,9 +26,9 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private boolean userType;    // value true means ADMIN - value false means USER
+    private String userType;    // admin or user
 
-    public User(String email, String password, boolean userType) {
+    public User(String email, String password, String userType) {
         this.email = email;
         this.password = password;
         this.userType = userType;

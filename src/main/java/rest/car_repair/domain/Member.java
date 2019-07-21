@@ -36,7 +36,7 @@ public class Member extends User{
     @JsonIgnore
     private List<Vehicle> vehicles;
 
-    public Member(String email, String password, boolean userType, String firstname, String lastname,String address, String vat) {
+    public Member(String email, String password, String userType, String firstname, String lastname,String address, String vat) {
         super(email,password,userType);
         this.vat = vat;
         this.firstname = firstname;
