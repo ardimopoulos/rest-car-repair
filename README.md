@@ -1,5 +1,5 @@
 ## rest-car-repair
-Rest API for car repair management
+Rest API for car repair shop management
 
 ## Stack
 
