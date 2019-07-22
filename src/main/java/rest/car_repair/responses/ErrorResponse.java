@@ -1,16 +1,20 @@
 package rest.car_repair.responses;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@AllArgsConstructor
-public class ErrorResponse {
+import static java.lang.Boolean.FALSE;
 
-    private LocalDateTime timestamp;
-    private int status;
+@Getter
+public class ErrorResponse extends Response{
+
     private String error;
     private String message;
+
+    public ErrorResponse(LocalDateTime timestamp, String status, String error, String message) {
+        super(timestamp, FALSE, status);
+        this.error = error;
+        this.message = message;
+    }
 }
