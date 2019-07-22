@@ -14,12 +14,14 @@ import rest.car_repair.exceptions.member.MemberNotFoundException;
 import rest.car_repair.exceptions.vehicle.VehicleExistException;
 import rest.car_repair.exceptions.vehicle.VehicleNotFoundException;
 import rest.car_repair.exceptions.vehicle.VehicleNotReferredToUserException;
+import rest.car_repair.responses.ResourceResponse;
 import rest.car_repair.services.VehicleService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -31,23 +33,35 @@ public class VehicleController {
     private ModelMapper modelMapper;
 
     @GetMapping("/members/{memberId}/vehicles")
-    public ResponseEntity<List<VehicleDTO>> getVehicles(@PathVariable @Min(1) Long memberId) throws VehicleNotFoundException, MemberNotFoundException {
+    public ResponseEntity<ResourceResponse> getVehicles(@PathVariable @Min(1) Long memberId) throws VehicleNotFoundException, MemberNotFoundException {
         List<Vehicle> allVehicles = vehicleService.getAllVehiclesByMember(memberId);
 
         Type listType = new TypeToken<List<VehicleDTO>>() {}.getType();
         List<VehicleDTO> allVehiclesDTO = modelMapper.map(allVehicles, listType);
 
-        return new ResponseEntity<>(allVehiclesDTO, HttpStatus.OK);
+        ResourceResponse resourceResponse = new ResourceResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK.name(),
+                allVehiclesDTO
+        );
+
+        return new ResponseEntity<>(resourceResponse, HttpStatus.OK);
     }
 
     @GetMapping("/members/{memberId}/vehicles/{vehicleId}")
-    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId)
+    public ResponseEntity<ResourceResponse> getVehicle(@PathVariable @Min(1) Long memberId, @PathVariable @Min(1) Long vehicleId)
             throws VehicleNotFoundException, VehicleNotReferredToUserException, MemberNotFoundException {
 
         Vehicle vehicle = vehicleService.getVehicleByMember(memberId, vehicleId);
         VehicleDTO vehicleDTO = modelMapper.map(vehicle, VehicleDTO.class);
 
-        return new ResponseEntity<>(vehicleDTO, HttpStatus.OK);
+        ResourceResponse resourceResponse = new ResourceResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK.name(),
+                vehicleDTO
+        );
+
+        return new ResponseEntity<>(resourceResponse, HttpStatus.OK);
     }
 
     @PostMapping("members/{memberId}/vehicles")

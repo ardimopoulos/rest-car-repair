@@ -12,12 +12,14 @@ import rest.car_repair.domain.Member;
 import rest.car_repair.dto.MemberDTO;
 import rest.car_repair.exceptions.member.MemberExistException;
 import rest.car_repair.exceptions.member.MemberNotFoundException;
+import rest.car_repair.responses.ResourceResponse;
 import rest.car_repair.services.MemberService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -29,21 +31,33 @@ public class MemberController {
     private ModelMapper modelMapper;
 
     @GetMapping("/members")
-    public ResponseEntity<List<MemberDTO>> getMembers() throws MemberNotFoundException {
+    public ResponseEntity<ResourceResponse> getMembers() throws MemberNotFoundException {
         List<Member> allMembers = memberService.getMembers();
 
         Type listType = new TypeToken<List<MemberDTO>>() {}.getType();
         List<MemberDTO> allMembersDTO = modelMapper.map(allMembers, listType);
 
-        return new ResponseEntity<>(allMembersDTO, HttpStatus.OK);
+        ResourceResponse resourceResponse = new ResourceResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK.name(),
+                allMembersDTO
+        );
+
+        return new ResponseEntity<>(resourceResponse, HttpStatus.OK);
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<MemberDTO> getMember(@PathVariable @Min(1) Long id) throws MemberNotFoundException {
+    public ResponseEntity<ResourceResponse> getMember(@PathVariable @Min(1) Long id) throws MemberNotFoundException {
         Member member = memberService.getMemberById(id);
         MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
 
-        return new ResponseEntity<>(memberDTO, HttpStatus.OK);
+        ResourceResponse resourceResponse = new ResourceResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK.name(),
+                memberDTO
+        );
+
+        return new ResponseEntity<>(resourceResponse, HttpStatus.OK);
     }
 
     @PostMapping("/members")
