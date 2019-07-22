@@ -27,9 +27,10 @@ import static java.util.Objects.nonNull;
 @Component
 public class JwtTokenProvider {
 
-    private static final long expirationTime = 3600000;
+    @Value("${jwt.expiration.time}")
+    private long expirationTime;
 
-    @Value("jwt.security.key")
+    @Value("${jwt.security.key}")
     private String secretKey;
 
     @Autowired

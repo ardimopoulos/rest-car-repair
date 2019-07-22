@@ -25,10 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.csrf().disable();
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        httpSecurity
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/token").permitAll()
+                .antMatchers("/swagger**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
