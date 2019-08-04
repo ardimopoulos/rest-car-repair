@@ -18,16 +18,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        Optional<Member> persistentMember = memberRepository.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) {
+        Optional<Member> persistentMember = memberRepository.findByEmail(email);
 
         if (!persistentMember.isPresent()) {
-            throw new UsernameNotFoundException ("Member with email " + username + "not found.");
+            throw new UsernameNotFoundException ("Member with email " + email + " not found.");
         }
 
         Member member = persistentMember.get();
 
-        return User.withUsername(username)
+        return User.withUsername(email)
                 .password(member.getPassword())
                 .authorities(member.getUserType())
                 .accountExpired(false)

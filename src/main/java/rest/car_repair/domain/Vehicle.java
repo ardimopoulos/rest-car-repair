@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "vehicle")
+@Table(name = "vehicles")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,8 +22,8 @@ public class Vehicle {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long vehicleId;
 
-    @Column(nullable = false, unique = true)
-    @Pattern(regexp = "[A-Z]{3}-[0-9]{3}")
+    @Column(nullable = false, unique = true, length = 8)
+    @Pattern(regexp = "[A-Z]{3}-[0-9]{4}")
     private String plate;
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Vehicle {
     private String color;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_Id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @JsonIgnore
     private Member member;
 
